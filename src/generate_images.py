@@ -1,10 +1,8 @@
-import numpy as np
-from skimage import color, data, feature
-from PIL import Image
-
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import cv2
+import numpy as np
+from skimage import color, data, feature
+
 
 def transform(img: np.array) -> np.array:
     if img.ndim == 3:
