@@ -1,0 +1,18 @@
+INFO:root:Test for test_1 with original shape (303, 384)
+INFO:root:For new size [10, 10] latency: 7.510185241699219e-05
+INFO:root:For new size [50, 50] latency: 5.173683166503906e-05
+INFO:root:For new size [100, 100] latency: 6.0558319091796875e-05
+INFO:root:For new size [250, 250] latency: 0.00013136863708496094
+INFO:root:For new size [500, 500] latency: 0.0002028942108154297
+INFO:root:Test for test_2 with original shape (512, 512)
+INFO:root:For new size [10, 10] latency: 6.222724914550781e-05
+INFO:root:For new size [50, 50] latency: 5.91278076171875e-05
+INFO:root:For new size [100, 100] latency: 8.845329284667969e-05
+INFO:root:For new size [250, 250] latency: 0.0001392364501953125
+INFO:root:For new size [500, 500] latency: 0.00024056434631347656
+INFO:root:Test for test_3 with original shape (328, 400)
+INFO:root:For new size [10, 10] latency: 5.364418029785156e-05
+INFO:root:For new size [50, 50] latency: 5.7697296142578125e-05
+INFO:root:For new size [100, 100] latency: 6.747245788574219e-05
+INFO:root:For new size [250, 250] latency: 0.00011563301086425781
+INFO:root:For new size [500, 500] latency: 0.0001423358917236328
