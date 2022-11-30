@@ -53,7 +53,8 @@ class ImageResizer(object):
     def _read_image(self) -> np.array:
         """Read image from file."""
         image = cv2.imread(self._img_filename)
-        return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        return image.astype(np.uint8)
 
     def _save_image(self, image: np.array) -> np.array:
         """Save resized image to file with new shape in written in filename."""
