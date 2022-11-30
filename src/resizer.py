@@ -27,7 +27,7 @@ class ImageResizer(object):
 
     @classmethod
     def nn_inter_vectorized(cls, image: np.array, new_shape: tp.Tuple[int, int]) -> np.array:
-        """Nearest neigbour interpolation (upscale and downscale). Vectorized implementation"""
+        """Nearest neigbour interpolation. Vectorized implementation"""
         img_height, img_width = image.shape
         new_height, new_width = new_shape
 
@@ -40,7 +40,7 @@ class ImageResizer(object):
 
     @classmethod
     def nn_inter_naive(cls, image: np.array, new_shape: tp.Tuple[int, int]) -> np.array:
-        """Nearest neigbour interpolation (upscale and downscale). Naive implementation"""
+        """Nearest neigbour interpolation. Naive implementation"""
         img_height, img_width = image.shape
         new_height, new_width = new_shape
         x_ratio = img_width / new_width
@@ -78,12 +78,12 @@ class ImageResizer(object):
         c = image[np.clip(y_h * img_width + x_l, 0, total_image_len - 1)]
         d = image[np.clip(y_h * img_width + x_h, 0, total_image_len - 1)]
 
-        resized = a * (1 - x_weight) * (1 - y_weight) + \
+        resized_image = a * (1 - x_weight) * (1 - y_weight) + \
                   b * x_weight * (1 - y_weight) + \
                   c * y_weight * (1 - x_weight) + \
                   d * x_weight * y_weight
 
-        return resized.reshape(new_height, new_width).astype(np.uint8)
+        return resized_image.reshape(new_height, new_width).astype(np.uint8)
 
     @classmethod
     def bilinear_inter_naive(cls, image: np.array, new_shape: tp.Tuple[int, int]) -> np.array:

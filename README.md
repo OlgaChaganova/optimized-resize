@@ -3,12 +3,14 @@
 Реализация nearest neighbour interpolation и bilinear interpolation для ресайза бинарных изображений на Numpy.
 
 
-**Подготовка среды (python 3.10.8)**:
+**Подготовка среды (python 3.10)**:
 ```commandline
 pip install -r requirements.txt
 ```
 
 **Генерация бинарных изображений для теста**:
+
+(предварительно нужно установить библиотеки `matplotlib`, `scikit-image`; готовые изображения лежат в `tests/images/`)
 
  ```
 python src/utils/generate_images.py
@@ -16,16 +18,24 @@ python src/utils/generate_images.py
 
 **Запустить программу**:
 
- ```
+ ```commandline
 python src/main.py <path_to_input_img> <img_width> <img_height> --mode [naive_nearest, vectorized_nearest, naive_bilinear, vectorized_bilinear]
  ```
+
+Например:
+
+```commandline
+ python src/main.py tests/images/3.jpg 768 768 --mode vectorized_bilinear
+```
+
+Результат сохранится в папку `tests/images/resized/`
 
 **Тестирование скорости работы**:
 
 ```commandline
 python src/test.py
 ```
-
+Результаты сохраняются в папку `tests/results`. В ней уже лежат результаты инференса на моей машине.
 
 ---
 ### Примеры работы
