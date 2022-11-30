@@ -5,11 +5,18 @@ from datetime import datetime
 from time import time
 
 import cv2
+import numpy as np
 from omegaconf import OmegaConf, DictConfig, ListConfig
 
 from resizer import ImageResizer
 from utils.system_info import get_system_info
 
+
+def read_binary_image(filename: str) -> np.array:
+    image = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+    _, image = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    image = (image // 255).astype(np.uint8)
+    return image
 
 def timeit(func: tp.Callable, **kwargs) -> float:
     """Measure inference time. Return time in ms."""
@@ -25,14 +32,19 @@ def test_latency(test_cases: DictConfig | ListConfig):
         logging.info(f'{param}: {desc}')
     logging.info('\n')
     for test_num, test_case in test_cases.items():
-        image = cv2.imread(test_case['img'])
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        image = read_binary_image(test_case['img'])
         logging.info(f'Test for {test_num} with original shape {image.shape}')
         for size in test_case['sizes'].values():
-            latency_vector = timeit(ImageResizer.nn_inter_vectorized, image=image, new_shape=size)
-            latency_naive = timeit(ImageResizer.nn_inter_naive, image=image, new_shape=size)
+            latency_nn_naive = timeit(ImageResizer.nn_inter_naive, image=image, new_shape=size)
+            latency_nn_vector = timeit(ImageResizer.nn_inter_vectorized, image=image, new_shape=size)
+            latency_bilinear_naive = timeit(ImageResizer.bilinear_inter_naive, image=image, new_shape=size)
+            latency_bilinear_vector = timeit(ImageResizer.bilinear_inter_vectorized, image=image, new_shape=size)
             logging.info(
-                f'New size {size}; NAIVE latency: {latency_naive:.4f} ms; VECTORIZED latency: {latency_vector:.4f} ms',
+                f'New size {size}; '
+                f'NAIVE NEAREST: {latency_nn_naive:.4f} ms; '
+                f'VECTORIZED NEAREST: {latency_nn_vector:.4f} ms; '
+                f'NAIVE BILINEAR: {latency_bilinear_naive:.4f} ms; '
+                f'VECTORIZED BILINEAR: {latency_bilinear_vector:.4f} ms'
             )
         logging.info('\n')
 
