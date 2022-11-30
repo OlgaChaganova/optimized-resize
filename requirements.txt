@@ -1,7 +1,4 @@
-matplotlib==3.6.2
-numpy==1.23.4
-omegaconf==2.2.3
-opencv_python==4.6.0.66
-psutil==5.9.4
-scikit_image==0.19.3
-skimage==0.0
+numpy==1.23.4  # векторные вычисления
+omegaconf==2.2.3  # для чтения yml конфига для теста
+opencv_python==4.6.0.66  # для чтения и сохранения изображений
+psutil==5.9.4  # system monitoring (для сохрания в логи информации о машине, на которой запускается код)
