@@ -5,13 +5,13 @@
 **Генерация бинарных изображений для теста**:
 
  ```
-python generate_images.py
+python src/utils/generate_images.py
  ```
 
 **Запустить программу**:
 
  ```
-python main.py <path_to_input_img> <img_width> <img_height>
+python src/main.py <path_to_input_img> <img_width> <img_height> --mode [naive, vectorized]
  ```
 
 **Тестирование скорости работы**:
