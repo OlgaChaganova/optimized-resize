@@ -83,7 +83,7 @@ class ImageResizer(object):
                   c * y_weight * (1 - x_weight) + \
                   d * x_weight * y_weight
 
-        return resized_image.reshape(new_height, new_width).astype(np.uint8)
+        return resized_image.reshape(new_height, new_width).astype(np.int8)
 
     @classmethod
     def bilinear_inter_naive(cls, image: np.array, new_shape: tp.Tuple[int, int]) -> np.array:
@@ -94,32 +94,32 @@ class ImageResizer(object):
         x_ratio = float(img_width - 1) / (new_width - 1)
         y_ratio = float(img_height - 1) / (new_height - 1)
         for i in range(new_height):
+            y = y_ratio * i
+            y_l = math.floor(y)
+            y_h = math.ceil(y)
+            y_weight = y - y_l
+            if y_h >= img_height:
+                y_h = img_height - 1
             for j in range(new_width):
-                x_l, y_l = math.floor(x_ratio * j), math.floor(y_ratio * i)
-                x_h, y_h = math.ceil(x_ratio * j), math.ceil(y_ratio * i)
+                x = x_ratio * j
+                x_l = math.floor(x)
+                x_h = math.ceil(x)
                 if x_h >= img_width:
                     x_h = img_width - 1
-                if y_h >= img_height:
-                    y_h = img_height - 1
-                x_weight = (x_ratio * j) - x_l
-                y_weight = (y_ratio * i) - y_l
+                x_weight = x - x_l
                 a = image[y_l, x_l]
                 b = image[y_l, x_h]
                 c = image[y_h, x_l]
                 d = image[y_h, x_h]
-                pixel = a * (1 - x_weight) * (1 - y_weight) + \
-                        b * x_weight * (1 - y_weight) + \
-                        c * y_weight * (1 - x_weight) + \
-                        d * x_weight * y_weight
-                resized_image[i][j] = pixel
-        return resized_image.astype(np.uint8)
+                resized_image[i][j] = (a - b - c + d) * x_weight * y_weight + (b - a) * x_weight + (c - a) * y_weight + a
+        return resized_image.astype(np.int8)
 
     def _read_image(self) -> np.array:
         """Read image from file and make it binary."""
         image = cv2.imread(self._img_filename, cv2.IMREAD_GRAYSCALE)
         _, image = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-        image = (image // 255).astype(np.uint8)
-        assert (np.unique(image) == np.array([0, 1], dtype=np.uint8)).all()
+        image = (image // 255).astype(np.int8)
+        assert (np.unique(image) == np.array([0, 1], dtype=np.int8)).all()
         return image
 
     def _save_image(self, image: np.array) -> np.array:
@@ -140,5 +140,5 @@ class ImageResizer(object):
             image = self.bilinear_inter_naive(image, self._new_shape)
         elif self._mode == 'vectorized_bilinear':
             image = self.bilinear_inter_vectorized(image, self._new_shape)
-        assert (np.unique(image) == np.array([0, 1], dtype=np.uint8)).all()
+        assert (np.unique(image) == np.array([0, 1], dtype=np.int8)).all()
         return image
